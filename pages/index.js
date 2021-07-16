@@ -5,9 +5,9 @@ import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet 
 import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations'
 
 function ProfileSidebar(props){
-  console.log(props)
+  //console.log(props)
   return(
-        <Box >
+        <Box as="aside">
           <img src={`https://github.com/${props.githubUser}.png`} style={{ borderRadius: '8px'}} />
           <hr />
 
@@ -24,16 +24,25 @@ function ProfileSidebar(props){
 }
 
 export default function Home() {
-  React.useState()
+  
   const githubUser = 'gilsongama'
-  const comunidades = ['Alurakut']
+  const [comunidades, setComunidades] = React.useState([{
+    id: '121209303940382929320',
+    title: 'Eu detesto acordar cedo',
+    image: 'https://alurakut.vercel.app/capa-comunidade-01.jpg'
+  }]);
+  //const comunidades = comunidades
+  
+  console.log("Nosso teste",)
+
   const favoritePeople = [
     'andremrezende',
    'omariosouto', 
    'juunegreiros', 
    'peas', 
    'rafaballerini',
-   'felipefialho'
+   'felipefialho',
+   'guilhermesilveira'
   ]
 
   return(
@@ -55,9 +64,20 @@ export default function Home() {
             <h2 className="subTitle">O que você deseja fazer?</h2>
             <form onSubmit={function handleCriaComunidade(e) {
               e.preventDefault();
-               console.log(e)
+              const dadosDoForm = new FormData(e.target)
+
+              console.log('Campo:', dadosDoForm.get('title'))
+              console.log('Campo:', dadosDoForm.get('image'))
+
+              const comunidade = {
+                id: new Date().toISOString(),
+                title: dadosDoForm.get('title'),
+                image: dadosDoForm.get('image')
+              }
                
-               comunidades.push('Alura Stars')
+               //comunidades.push('Alura Stars')
+               const comunidadesAtualizadas = [...comunidades, comunidade]
+               setComunidades([comunidadesAtualizadas])
                console.log(comunidades)
             }}>
               <div>
@@ -88,10 +108,10 @@ export default function Home() {
             <ul>
               {comunidades.map((itemAtual) => {
                 return (
-                  <li>
-                    <a href={`/users/${itemAtual}`} key={itemAtual}>
-                      <img src={`https://placehold.it/500x500`} />
-                      <span>{itemAtual}</span>
+                  <li id={itemAtual.id}>
+                    <a href={`/users/${itemAtual.title}`}>
+                      <img src={itemAtual.image} />
+                      <span>{itemAtual.title}</span>
                     </a>
                   </li> 
                 )
@@ -101,12 +121,12 @@ export default function Home() {
           </ProfileRelationsBoxWrapper>
           <ProfileRelationsBoxWrapper>
             <h2 className="smallTitle">
-              Pessoas da Comunidade ({favoritePeople.length})
+              Comunidades ({comunidades.length})
             </h2>
             <ul>
               {favoritePeople.map((itemAtual) => {
                 return (
-                  <li>
+                  <li key={itemAtual}>
                     <a href={`/users/${itemAtual}`} key={itemAtual}>
                       <img src={`https://github.com/${itemAtual}.png`} />
                       <span>{itemAtual}</span>
